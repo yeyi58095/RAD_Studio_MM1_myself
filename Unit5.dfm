@@ -58,8 +58,8 @@ object Form5: TForm5
   object Label5: TLabel
     Left = 384
     Top = 80
-    Width = 49
-    Height = 27
+    Width = 31
+    Height = 13
     Caption = 'Debug'
   end
   object ITComboBox: TComboBox
@@ -83,6 +83,7 @@ object Form5: TForm5
     Height = 21
     TabOrder = 1
     Text = 'STComboBox'
+    OnChange = STComboBoxChange
     Items.Strings = (
       'Uniform R.V'
       'Exponential R.V'

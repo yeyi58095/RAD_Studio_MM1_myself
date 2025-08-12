@@ -30,6 +30,7 @@ __published:	// IDE-managed Components
 	void __fastcall MQSizeChange(TObject *Sender);
 	void __fastcall MSSizeChange(TObject *Sender);
 	void __fastcall ITComboBoxChange(TObject *Sender);
+	void __fastcall STComboBoxChange(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	double paraIT1;

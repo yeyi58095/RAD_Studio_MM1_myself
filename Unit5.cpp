@@ -3,6 +3,7 @@
 #include <vcl.h>
 #pragma hdrstop
 #include "ITFormDialog.h"
+#include "STFormDialog.h"
 #include "Unit5.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -11,10 +12,43 @@ TForm5 *Form5;
 double end_time = 0;
 double mean_queue_size = 0;
 double mean_system_size = 0;
+//-------------------------------
+double uniform(double a, double b)
+{ int n;
+  double x;
+
+  n=rand()%(int)pow(2.0,15);
+  x=a+(b-a)*n/pow(2.0,15);
+  return x;
+}
+
+double exponential(double r)
+{ double x,y;
+  //srand(1);
+  x=uniform(0,1);
+  if (x<=1e-10)
+	  x=1e-10;
+  y=-log(1-x)/r;
+  return(y);
+}
+
+double normal(double m, double v)
+{ double x1, x2, y;
+  double pi = 3.14159;
+  //srand(1);
+  x1=uniform(0,1);
+  x2=uniform(0,1);
+  if (x2<=1e-10)
+	  x2=1e-10;
+  y=m+v*cos(2*pi*x1)*sqrt((-2)*log(x2));
+  return(y);
+}
 //---------------------------------------------------------------------------
 __fastcall TForm5::TForm5(TComponent* Owner)
 	: TForm(Owner)
 {
+	SimulationTEdit->Text = 10000;
+
 }
 //---------------------------------------------------------------------------
 
@@ -22,8 +56,15 @@ void __fastcall TForm5::updateParaIT(double p1, double p2){
 	this->paraIT1 = p1;
 	this->paraIT2 = p2;
 
-
 	Label5->Caption = paraIT1;
+	return ;
+}
+
+void __fastcall TForm5::updateParaST(double p1, double p2){
+	this->paraST1 = p1;
+	this->paraST2 = p2;
+
+	Label5->Caption = FloatToStr(paraST1) + " " + FloatToStr(paraST2);
 	return ;
 }
 
@@ -67,4 +108,11 @@ void __fastcall TForm5::ITComboBoxChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+
+
+void __fastcall TForm5::STComboBoxChange(TObject *Sender)
+{
+	STForm->Show();
+}
+//---------------------------------------------------------------------------
 
