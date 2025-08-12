@@ -1,0 +1,26 @@
+//---------------------------------------------------------------------------
+
+#ifndef ITFormDialogH
+#define ITFormDialogH
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TITForm : public TForm
+{
+__published:	// IDE-managed Components
+	TLabel *Label1;
+	TEdit *Edit1;
+	TLabel *Label2;
+	TEdit *Edit2;
+	void __fastcall FormShow(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	__fastcall TITForm(TComponent* Owner);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TITForm *ITForm;
+//---------------------------------------------------------------------------
+#endif

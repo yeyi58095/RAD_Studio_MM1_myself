@@ -24,12 +24,21 @@ __published:	// IDE-managed Components
 	TButton *Run;
 	TButton *Plot;
 	TButton *Stop;
+	TLabel *CurrentEvent;
+	TLabel *Label5;
 	void __fastcall SimulationTEditChange(TObject *Sender);
 	void __fastcall MQSizeChange(TObject *Sender);
 	void __fastcall MSSizeChange(TObject *Sender);
+	void __fastcall ITComboBoxChange(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
+	double paraIT1;
+	double paraIT2;
+	double paraST1;
+	double paraST2;
 	__fastcall TForm5(TComponent* Owner);
+	void __fastcall updateParaIT(double p1, double p2);
+	void __fastcall updateParaST(double p1, double p2);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TForm5 *Form5;

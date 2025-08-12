@@ -1,0 +1,54 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+#include "ITFormDialog.h"
+#include "Unit5.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm5 *Form5;
+double end_time = 0;
+double mean_queue_size = 0;
+double mean_system_size = 0;
+//---------------------------------------------------------------------------
+__fastcall TForm5::TForm5(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm5::SimulationTEditChange(TObject *Sender)
+{
+	if(SimulationTEdit->Text == ""){
+		end_time = 0;
+		return ;
+	}
+	end_time = StrToFloat(SimulationTEdit->Text);
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm5::MQSizeChange(TObject *Sender)
+{
+	if(MQSize->Text == ""){
+		mean_queue_size = 0;
+		return ;
+	}
+	mean_queue_size = StrToFloat(MQSize->Text);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TForm5::MSSizeChange(TObject *Sender)
+{
+	if(MSSize->Text == ""){
+		mean_system_size = 0;
+		return ;
+	}
+	mean_system_size = StrToFloat(MSSize->Text);
+}
+//---------------------------------------------------------------------------
+
+
+

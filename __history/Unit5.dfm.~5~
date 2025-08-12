@@ -1,0 +1,135 @@
+object Form5: TForm5
+  Left = 0
+  Top = 0
+  Caption = 'Form5'
+  ClientHeight = 316
+  ClientWidth = 587
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 25
+    Top = 39
+    Width = 90
+    Height = 14
+    Caption = 'Interarrival Time'
+  end
+  object ServiceTime: TLabel
+    Left = 51
+    Top = 66
+    Width = 60
+    Height = 14
+    Caption = 'Service Time'
+  end
+  object Label2: TLabel
+    Left = 38
+    Top = 94
+    Width = 73
+    Height = 13
+    Caption = 'Simulation Time'
+  end
+  object Label3: TLabel
+    Left = 29
+    Top = 122
+    Width = 82
+    Height = 12
+    Caption = 'Mean Queue Size'
+  end
+  object Label4: TLabel
+    Left = 29
+    Top = 148
+    Width = 86
+    Height = 13
+    Caption = 'Mean System Size'
+  end
+  object CurrentEvent: TLabel
+    Left = 50
+    Top = 176
+    Width = 65
+    Height = 13
+    Caption = 'CurrentEvent'
+  end
+  object ITComboBox: TComboBox
+    Left = 128
+    Top = 32
+    Width = 145
+    Height = 21
+    TabOrder = 0
+    Text = 'ITComboBox'
+    Items.Strings = (
+      'Uniform R.V'
+      'Exponential R.V'
+      'Normal R.V'
+      'Pareto R.V')
+  end
+  object STComboBox: TComboBox
+    Left = 128
+    Top = 63
+    Width = 145
+    Height = 21
+    TabOrder = 1
+    Text = 'STComboBox'
+    Items.Strings = (
+      'Uniform R.V'
+      'Exponential R.V'
+      'Normal R.V'
+      'Pareto R.V')
+  end
+  object SimulationTEdit: TEdit
+    Left = 128
+    Top = 90
+    Width = 121
+    Height = 21
+    TabOrder = 2
+    Text = '0'
+    OnChange = SimulationTEditChange
+  end
+  object MQSize: TEdit
+    Left = 128
+    Top = 117
+    Width = 121
+    Height = 21
+    TabOrder = 3
+    Text = '0'
+    OnChange = MQSizeChange
+  end
+  object MSSize: TEdit
+    Left = 121
+    Top = 144
+    Width = 121
+    Height = 21
+    TabOrder = 4
+    Text = '0'
+    OnChange = MSSizeChange
+  end
+  object Run: TButton
+    Left = 40
+    Top = 224
+    Width = 75
+    Height = 25
+    Caption = 'Run'
+    TabOrder = 5
+  end
+  object Plot: TButton
+    Left = 160
+    Top = 224
+    Width = 75
+    Height = 25
+    Caption = 'Plot'
+    TabOrder = 6
+  end
+  object Stop: TButton
+    Left = 40
+    Top = 272
+    Width = 75
+    Height = 25
+    Caption = 'Stop'
+    TabOrder = 7
+  end
+end

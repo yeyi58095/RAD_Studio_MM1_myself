@@ -2,7 +2,7 @@
 
 #include <vcl.h>
 #pragma hdrstop
-
+#include "ITFormDialog.h"
 #include "Unit5.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -17,6 +17,15 @@ __fastcall TForm5::TForm5(TComponent* Owner)
 {
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TForm5::updateParaIT(double p1, double p2){
+	this->paraIT1 = p1;
+	this->paraIT2 = p2;
+
+
+	Label5->Caption = paraIT1;
+	return ;
+}
 
 void __fastcall TForm5::SimulationTEditChange(TObject *Sender)
 {
@@ -47,6 +56,14 @@ void __fastcall TForm5::MSSizeChange(TObject *Sender)
 		return ;
 	}
 	mean_system_size = StrToFloat(MSSize->Text);
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm5::ITComboBoxChange(TObject *Sender)
+{
+	ITForm->Show();
 }
 //---------------------------------------------------------------------------
 

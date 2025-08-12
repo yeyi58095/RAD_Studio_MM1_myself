@@ -14,17 +14,17 @@ object Form5: TForm5
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 32
-    Top = 29
-    Width = 90
-    Height = 21
+    Left = 25
+    Top = 39
+    Width = 79
+    Height = 13
     Caption = 'Interarrival Time'
   end
   object ServiceTime: TLabel
     Left = 51
     Top = 66
     Width = 60
-    Height = 14
+    Height = 13
     Caption = 'Service Time'
   end
   object Label2: TLabel
@@ -37,8 +37,8 @@ object Form5: TForm5
   object Label3: TLabel
     Left = 29
     Top = 122
-    Width = 82
-    Height = 12
+    Width = 83
+    Height = 13
     Caption = 'Mean Queue Size'
   end
   object Label4: TLabel
@@ -48,13 +48,28 @@ object Form5: TForm5
     Height = 13
     Caption = 'Mean System Size'
   end
+  object CurrentEvent: TLabel
+    Left = 50
+    Top = 176
+    Width = 65
+    Height = 13
+    Caption = 'CurrentEvent'
+  end
+  object Label5: TLabel
+    Left = 384
+    Top = 80
+    Width = 49
+    Height = 27
+    Caption = 'Debug'
+  end
   object ITComboBox: TComboBox
     Left = 128
-    Top = 29
+    Top = 32
     Width = 145
     Height = 21
     TabOrder = 0
     Text = 'ITComboBox'
+    OnChange = ITComboBoxChange
     Items.Strings = (
       'Uniform R.V'
       'Exponential R.V'
