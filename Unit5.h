@@ -11,6 +11,22 @@
 class TForm5 : public TForm
 {
 __published:	// IDE-managed Components
+	TLabel *Label1;
+	TLabel *ServiceTime;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
+	TComboBox *ITComboBox;
+	TComboBox *STComboBox;
+	TEdit *SimulationTEdit;
+	TEdit *MQSize;
+	TEdit *MSSize;
+	TButton *Run;
+	TButton *Plot;
+	TButton *Stop;
+	void __fastcall SimulationTEditChange(TObject *Sender);
+	void __fastcall MQSizeChange(TObject *Sender);
+	void __fastcall MSSizeChange(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TForm5(TComponent* Owner);
