@@ -56,7 +56,7 @@
         <SanitizedProjectName>MM1_myself</SanitizedProjectName>
         <Multithreaded>true</Multithreaded>
         <ProjectType>CppVCLApplication</ProjectType>
-        <AllPackageLibs>rtl.lib;vcl.lib</AllPackageLibs>
+        <AllPackageLibs>rtl.lib;vcl.lib;Tee.lib;vclimg.lib</AllPackageLibs>
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
@@ -108,7 +108,7 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <AppEnableHighDPI>true</AppEnableHighDPI>
-        <LinkPackageImports>rtl.bpi;vcl.bpi</LinkPackageImports>
+        <LinkPackageImports>rtl.bpi;vcl.bpi;Tee.bpi;vclimg.bpi</LinkPackageImports>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -124,6 +124,12 @@
         <BCC_PCHName_Clang>MM1_myselfPCH1.h</BCC_PCHName_Clang>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="CharterDialog.cpp">
+            <Form>Charter</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>CharterDialog.h</DependentOn>
+            <BuildOrder>5</BuildOrder>
+        </CppCompile>
         <CppCompile Include="ITFormDialog.cpp">
             <Form>ITForm</Form>
             <FormType>dfm</FormType>
@@ -137,13 +143,21 @@
             <BuildOrder>1</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
+        <CppCompile Include="STFormDialog.cpp">
+            <Form>STForm</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>STFormDialog.h</DependentOn>
+            <BuildOrder>4</BuildOrder>
+        </CppCompile>
         <CppCompile Include="Unit5.cpp">
             <Form>Form5</Form>
             <FormType>dfm</FormType>
             <DependentOn>Unit5.h</DependentOn>
             <BuildOrder>2</BuildOrder>
         </CppCompile>
+        <FormResources Include="STFormDialog.dfm"/>
         <FormResources Include="Unit5.dfm"/>
+        <FormResources Include="CharterDialog.dfm"/>
         <FormResources Include="ITFormDialog.dfm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

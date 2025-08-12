@@ -26,11 +26,16 @@ __published:	// IDE-managed Components
 	TButton *Stop;
 	TLabel *CurrentEvent;
 	TLabel *Label5;
+	TEdit *Edit5;
+	TEdit *Edit6;
 	void __fastcall SimulationTEditChange(TObject *Sender);
 	void __fastcall MQSizeChange(TObject *Sender);
 	void __fastcall MSSizeChange(TObject *Sender);
 	void __fastcall ITComboBoxChange(TObject *Sender);
 	void __fastcall STComboBoxChange(TObject *Sender);
+	void __fastcall RunClick(TObject *Sender);
+	void __fastcall PlotClick(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	double paraIT1;

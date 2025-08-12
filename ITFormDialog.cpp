@@ -12,8 +12,12 @@ TITForm *ITForm;
 __fastcall TITForm::TITForm(TComponent* Owner)
 	: TForm(Owner)
 {
-Edit1->Text = 0;
-Edit2->Text = 0;
+	Edit1->Text = 1;
+	Edit2->Text = 0;
+	Form5->updateParaIT(
+		StrToFloat(Edit1->Text),
+		StrToFloat(Edit2->Text)
+	);
 }
 //---------------------------------------------------------------------------
 

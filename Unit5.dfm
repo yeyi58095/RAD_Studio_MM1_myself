@@ -11,6 +11,7 @@ object Form5: TForm5
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -64,7 +65,7 @@ object Form5: TForm5
   end
   object ITComboBox: TComboBox
     Left = 128
-    Top = 32
+    Top = 36
     Width = 145
     Height = 21
     TabOrder = 0
@@ -109,7 +110,7 @@ object Form5: TForm5
     OnChange = MQSizeChange
   end
   object MSSize: TEdit
-    Left = 121
+    Left = 128
     Top = 144
     Width = 121
     Height = 21
@@ -124,6 +125,7 @@ object Form5: TForm5
     Height = 25
     Caption = 'Run'
     TabOrder = 5
+    OnClick = RunClick
   end
   object Plot: TButton
     Left = 160
@@ -132,6 +134,7 @@ object Form5: TForm5
     Height = 25
     Caption = 'Plot'
     TabOrder = 6
+    OnClick = PlotClick
   end
   object Stop: TButton
     Left = 40
@@ -140,5 +143,19 @@ object Form5: TForm5
     Height = 25
     Caption = 'Stop'
     TabOrder = 7
+  end
+  object Edit5: TEdit
+    Left = 128
+    Top = 171
+    Width = 81
+    Height = 18
+    TabOrder = 8
+  end
+  object Edit6: TEdit
+    Left = 215
+    Top = 171
+    Width = 82
+    Height = 18
+    TabOrder = 9
   end
 end
