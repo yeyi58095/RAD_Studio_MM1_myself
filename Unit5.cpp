@@ -11,8 +11,268 @@
 #pragma resource "*.dfm"
 TForm5 *Form5;
 double end_time = 0;
+double exponential(double);
+double normal(double, double);
+double uniform(double, double);
+int event_ID();
+
+enum {ARRIVAL=0, SERVICE=1, DEPARTURE=2 };
+int event_ID();
+
+//---------------------------------------------------------------------------
+//=========================
+// LinkedList 節點
+//=========================
+class LinkedList {
+public:
+	int eventID;        // 事件 ID
+	double time;        // 事件時間
+	LinkedList* next;   // 下一個節點
+
+	// 真正節點
+	LinkedList(int eventID, double time)
+		: eventID(eventID), time(time), next(NULL) {}
+
+	// Dummy 節點（不存事件）
+	LinkedList()
+		: eventID(-1), time(0.0), next(NULL) {}
+
+	// 輸出用
+	AnsiString toString() const {
+		return "event: " + IntToStr(eventID) +
+			   ", time: " + FloatToStrF(time, ffFixed, 7, 3) + " -> ";
+	}
+};
+
+//=========================
+// 列印（從 dummy->next 開始）
+//=========================
+void printLinkedList(LinkedList* head) {
+	LinkedList* current = head;
+	AnsiString result = "";
+	while (current != NULL) {
+		result += current->toString();
+		current = current->next;
+	}
+	ShowMessage(result);
+}
+
+//=========================
+// 插入：時間遞增，同時間排後面
+//=========================
+void LinkedList_push(LinkedList* dummy, int event, double time) {
+	LinkedList* node = new LinkedList(event, time);
+	LinkedList* cur = dummy;
+	while (cur->next != NULL && cur->next->time <= time) {
+		cur = cur->next;
+	}
+	node->next = cur->next;
+	cur->next = node;
+}
+
+
+void LinkedList_push(LinkedList* dummy, LinkedList* node) {
+	if (!node) return;
+	node->next = NULL;
+	LinkedList_push(dummy, node->eventID, node->time);
+}
+
+//=========================
+// 彈出第一個（含回傳事件資料）
+//=========================
+bool LinkedList_pop(LinkedList* dummy, int& eventID, double& time) {
+	if (dummy->next == NULL) return false;
+	LinkedList* n = dummy->next;
+	dummy->next = n->next;
+	eventID = n->eventID;
+	time = n->time;
+	delete n;
+	return true;
+}
+
+// 不回傳資料
+bool LinkedList_pop(LinkedList* dummy) {
+	if (dummy->next == NULL) return false;
+	LinkedList* n = dummy->next;
+	dummy->next = n->next;
+	delete n;
+	return true;
+}
+
+//=========================
+// 測試用
+LinkedList* dummy;
+//=========================
+void DebugWindows() {
+	//dummy = new LinkedList(); // Dummy 頭節點
+	/*
+	LinkedList_push(dummy, 2, 4.0);
+	LinkedList_push(dummy, 3, 4.5);
+	LinkedList_push(dummy, 1, 5.0);
+	printLinkedList(dummy->next); // 4.0 -> 4.5 -> 5.0
+
+	LinkedList_pop(dummy);
+	printLinkedList(dummy->next); // 4.5 -> 5.0
+
+	LinkedList_pop(dummy);
+	printLinkedList(dummy->next); // 5.0
+
+	LinkedList_pop(dummy);
+	printLinkedList(dummy->next); // 空
+
+	// 再插入
+	LinkedList_push(dummy, 9, 7.0);
+	printLinkedList(dummy->next); // 7.0   */
+	ShowMessage(ARRIVAL);
+}
+//--------------------------------
+int next_event;
+//----------------------------------------------
+
 double mean_queue_size = 0;
 double mean_system_size = 0;
+int queue_size, system_size;  // queue_size is the number of the current queueing people, and system_size is including the people serving
+double sum_queue, sum_system; // sum_queue = (now - previous_time) * queue_size (the concept of weightwing)
+
+double next_time;
+double previous_time;  // for calculating the queue_size
+int top;
+double now;
+
+void statics(){
+   sum_queue += (now-previous_time)*queue_size;
+   sum_system += (now-previous_time)*system_size;
+   if (now>0) {
+	  mean_queue_size = sum_queue/now;
+	  mean_system_size = sum_system/now;
+   }
+   Form5->MQSize->Text = FloatToStrF(mean_queue_size,ffFixed,7,6);
+   Form5->MSSize->Text = FloatToStrF(mean_system_size,ffFixed,7,6);
+}
+
+void initial(){
+	now = 0;
+	queue_size = 0;
+	system_size = 0;
+	sum_queue = 0;
+	sum_system = 0;
+	next_time = 0;
+	next_event = 0;
+	previous_time = 0;
+	dummy = new LinkedList();
+}
+
+void arrival(){
+	double deltaTime, next_arrival;
+	now = next_time;
+	switch(Form5->ITComboBox->ItemIndex){
+		case 0:
+			deltaTime = uniform(Form5->paraIT1, Form5->paraIT2);
+			break;
+		case 1:
+			deltaTime = exponential(Form5->paraIT1);
+			break;
+		case 2:
+			deltaTime = normal(Form5->paraIT1, Form5->paraIT2);
+			break;
+
+		default:
+			break;
+	}
+	/*Uniform R.V
+	Exponential R.V
+	Normal R.V
+	Pareto R.V
+	*/
+	next_arrival = now + deltaTime;
+	LinkedList_push(dummy, ARRIVAL, next_arrival);  // the upon part is for deciding the next arrival time
+	// the following part is for determining  whether the system is empty available
+	if(system_size == 0){
+		next_event = SERVICE;
+		next_time = now;
+	}else{
+		LinkedList_pop(dummy, next_event, next_time);
+	}
+	previous_time = now;
+
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+	queue_size ++;
+	system_size ++;
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+}
+void service(){
+	now = next_time;
+
+	double serviceTime = 0;
+	switch(Form5->STComboBox->ItemIndex){
+		case 0:
+			serviceTime = uniform(Form5->paraST1, Form5->paraST2);
+			break;
+		case 1:
+			serviceTime = exponential(Form5->paraST1);
+			break;
+		case 2:
+			serviceTime = normal(Form5->paraST1, Form5->paraST2);
+			break;
+		default:
+			break;
+	}
+
+	LinkedList_push(dummy, DEPARTURE, now + serviceTime);
+
+	statics();
+	previous_time = now;
+	//一個人從排隊轉為服務中
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+	if (queue_size > 0) queue_size--;
+	LinkedList_pop(dummy, next_event, next_time);
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+}
+void departure(){
+    now = next_time;
+
+	// 統計...
+	statics();
+	previous_time = now;
+
+	// 一個人離開系統
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+	if (system_size > 0) system_size--;
+	Charter->Series1->AddXY(now, queue_size, "", clRed);
+	Charter->Series2->AddXY(now, mean_queue_size, "", clBlue); // 若你要畫平均線
+
+    // 若還有人在排隊，下一個服務「立刻」開始（同一時間）
+    if (queue_size > 0){
+        next_event = SERVICE;
+        next_time  = now;   // 立刻開始
+    } else {
+        // 沒人排 → 從 FEL 取下一個最早事件
+        LinkedList_pop(dummy, next_event, next_time);
+    }
+}
+
+int event_ID() {
+	return next_event;   // 0=ARRIVAL, 1=SERVICE, 2=DEPARTURE
+}
+
+/*int event_ID()
+{
+  if (next_event == "arrival")
+	  return 0;
+  else if (next_event == "service")
+	  return 1;
+  else if (next_event == "departure")
+	  return 2;
+}
+
+int event_ID(AnsiString event){
+   if (event == "arrival")
+	  return 0;
+  else if (event == "service")
+	  return 1;
+  else if (event == "departure")
+	  return 2;
+}*/
 //-------------------------------
 double uniform(double a, double b)
 { int n;
@@ -45,159 +305,7 @@ double normal(double m, double v)
   return(y);
 }
 
-int location(int low,int high,double time,double S[1000])
-{ int mid ;
 
-  if (low > high )
-	  return low ;
-  else { mid=(low+high)/2;
-		  if (time == S[mid])
-			  return mid+1;
-		  else if (time < S[mid])
-				   return location(low,mid-1,time,S);
-			  else return location(mid+1,high,time,S);
-  }
- }
-
-int top = -1;
-double stack_time[1000];
-AnsiString stack_event[1000];
-
-void stack_push(AnsiString event,double time)
-{ int i, j, mid;
-
-  i=0;
-  j=location(0,top,time,stack_time);
-  for (i = top + 1; i > j; i--){
-		stack_time[i] = stack_time[i-1];
-		stack_event[i] = stack_event[i-1];
-  }
-  stack_time[j] = time;
-  stack_event[j] = event;
-  top++;
-}
-
-AnsiString next_event;
-double next_event_time;
-void stack_pop()
-{ int i;
-
-  next_event=stack_event[0];
-  next_event_time=stack_time[0];
-  for (i = 0; i < top; i++){
-		stack_time[i] = stack_time[i+1];
-		stack_event[i] = stack_event[i+1];
-  }
-  if (top>-1)
-	  top--;
-}
-
-double now, previous_event_time;
-int queue_size, system_size;
-double sum_queue, sum_system;
-void statistics()
-{
-   sum_queue += (now-previous_event_time)*queue_size;
-   sum_system += (now-previous_event_time)*system_size;
-   if (now>0) {
-	  mean_queue_size = sum_queue/now;
-	  mean_system_size = sum_system/now;
-   }
-   Form5->MQSize->Text = FloatToStrF(mean_queue_size,ffFixed,7,6);
-   Form5->MSSize->Text = FloatToStrF(mean_system_size,ffFixed,7,6);
- }
-
- void arrival()
-{ double x, next_arrival;
-
-  now = next_event_time;
-  if (Form5->ITComboBox->ItemIndex==0)
-	  x = uniform(Form5->paraIT1,Form5->paraIT2);
-  else if (Form5->ITComboBox->ItemIndex==1)
-	  x = exponential(Form5->paraIT1);
-  else if (Form5->ITComboBox->ItemIndex==2)
-	  x = normal(Form5->paraIT1, Form5->paraIT2);
-  next_arrival = now + x;
-  stack_push("arrival",next_arrival);
-  //Print_Scheduler();
-  if (system_size==0)
-	  next_event = "service";
-  else stack_pop();
-  statistics();
-  previous_event_time=now;
-
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-  queue_size ++;
-  system_size ++;
-  //Print_View("A");
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-}
-void service()
-{ double x, next_departure;
-
-  now = next_event_time;
-  if (Form5->STComboBox->ItemIndex==0)
-	  x = uniform(Form5->paraST1, Form5->paraST2);
-  else if (Form5->STComboBox->ItemIndex==1)
-	  x = exponential(Form5->paraST1);
-  else if (Form5->STComboBox->ItemIndex==2)
-	  x = normal(Form5->paraST1, Form5->paraST2);
-  next_departure = now + x;
-  stack_push("departure",next_departure);
-  statistics();
-  previous_event_time=now;
-  //Print_Scheduler();
-
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-  queue_size --;
-  stack_pop();
-  //Print_View("S");
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-}
-void departure()
-{
-  now = next_event_time;
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-  statistics();
-  previous_event_time=now;
-  system_size --;
-  //Print_Scheduler();
-  if (queue_size>0)
-	  next_event = "service";
-  else stack_pop();
-
-  //Print_View("D");
-  Charter->Series1->AddXY(now,queue_size,"",clRed);
-  Charter->Series2->AddXY(now,mean_queue_size,"",clBlue);
-}
-void initialization()
-{
-  now = 0;
-  queue_size = 0;
-  system_size = 0;
-  sum_queue = 0;
-  sum_system = 0;
-  next_event = "arrival";
-  next_event_time = 0;
-  previous_event_time = 0;
-  Form5->MQSize->Text = "0";
-  Form5->MSSize->Text = "0";
-  top=-1;
-  //Form1->ComboBox1->ItemIndex==1;
-  //Form1->ComboBox1->Text="Exponential R.V.";
-  //Form1->ComboBox2->ItemIndex==1;
-  //Form1->ComboBox2->Text="Exponential R.V.";
-}
-
-int event_ID()
-{
-  if (next_event == "arrival")
-	  return 0;
-  else if (next_event == "service")
-	  return 1;
-  else if (next_event == "departure")
-	  return 2;
-}
  //---------------------------------------------------------------------------
 __fastcall TForm5::TForm5(TComponent* Owner)
 	: TForm(Owner)
@@ -234,8 +342,6 @@ void __fastcall TForm5::SimulationTEditChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
-
 void __fastcall TForm5::MQSizeChange(TObject *Sender)
 {
 	if(MQSize->Text == ""){
@@ -264,8 +370,6 @@ void __fastcall TForm5::ITComboBoxChange(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
-
 void __fastcall TForm5::STComboBoxChange(TObject *Sender)
 {
 	STForm->Show();
@@ -293,8 +397,8 @@ void __fastcall TForm5::RunClick(TObject *Sender)
 	for(int i = 0; i < end_time; i+= 100){
 		Charter->Series2->AddXY(i, normal(5,10));
 	}     */
+   initial();
 
-	initialization();
   Edit5->Text = "";
   Edit6->Text = "";
   //end_time = StrToFloat(Edit->Text);
@@ -312,11 +416,11 @@ void __fastcall TForm5::RunClick(TObject *Sender)
 	  }
 	  Charter->Chart1->Refresh();
 	  Application->ProcessMessages();
-	  if (int(now)%100==0)
+	  if (int(now)%100==0)    ;
 		  Edit6->Text = FloatToStrF(now,ffFixed,7,3);
   }
   //fclose(pi);
-  Edit5->Text = "End";
+  Edit5->Text = "End";	//DebugWindows();
 }
 //---------------------------------------------------------------------------
 
@@ -334,5 +438,7 @@ void __fastcall TForm5::FormShow(TObject *Sender)
 	STComboBox->ItemIndex = 1;
 }
 //---------------------------------------------------------------------------
+
+
 
 

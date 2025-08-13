@@ -1,0 +1,52 @@
+//---------------------------------------------------------------------------
+
+#ifndef Unit5H
+#define Unit5H
+//---------------------------------------------------------------------------
+#include <System.Classes.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.StdCtrls.hpp>
+#include <Vcl.Forms.hpp>
+//---------------------------------------------------------------------------
+class TForm5 : public TForm
+{
+__published:	// IDE-managed Components
+	TLabel *Label1;
+	TLabel *ServiceTime;
+	TLabel *Label2;
+	TLabel *Label3;
+	TLabel *Label4;
+	TComboBox *ITComboBox;
+	TComboBox *STComboBox;
+	TEdit *SimulationTEdit;
+	TEdit *MQSize;
+	TEdit *MSSize;
+	TButton *Run;
+	TButton *Plot;
+	TButton *Stop;
+	TLabel *CurrentEvent;
+	TLabel *Label5;
+	TEdit *Edit5;
+	TEdit *Edit6;
+	void __fastcall SimulationTEditChange(TObject *Sender);
+	void __fastcall MQSizeChange(TObject *Sender);
+	void __fastcall MSSizeChange(TObject *Sender);
+	void __fastcall ITComboBoxChange(TObject *Sender);
+	void __fastcall STComboBoxChange(TObject *Sender);
+	void __fastcall RunClick(TObject *Sender);
+	void __fastcall PlotClick(TObject *Sender);
+	void __fastcall FormShow(TObject *Sender);
+private:	// User declarations
+public:		// User declarations
+	double paraIT1;
+	double paraIT2;
+	double paraST1;
+	double paraST2;
+	__fastcall TForm5(TComponent* Owner);
+	void __fastcall updateParaIT(double p1, double p2);
+	void __fastcall updateParaST(double p1, double p2);
+};
+//---------------------------------------------------------------------------
+extern PACKAGE TForm5 *Form5;
+//---------------------------------------------------------------------------
+#endif
