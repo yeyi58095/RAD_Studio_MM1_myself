@@ -148,14 +148,14 @@ object Form5: TForm5
     Left = 128
     Top = 171
     Width = 81
-    Height = 18
+    Height = 21
     TabOrder = 8
   end
   object Edit6: TEdit
     Left = 215
     Top = 171
     Width = 82
-    Height = 18
+    Height = 21
     TabOrder = 9
   end
 end

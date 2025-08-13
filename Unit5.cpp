@@ -312,7 +312,7 @@ void __fastcall TForm5::RunClick(TObject *Sender)
 	  }
 	  Charter->Chart1->Refresh();
 	  Application->ProcessMessages();
-	  if (int(now)%100==0)    ;
+	  if (int(now)%100==0)
 		  Edit6->Text = FloatToStrF(now,ffFixed,7,3);
   }
   //fclose(pi);
